@@ -4,4 +4,38 @@
 
 {% block titulo %}Alterar Médicos{% endblock %}
 
-{% block conteudo %}Aqui dentro vai o conteúdo...{% endblock %}
+{% block conteudo %}
+
+<h3>Alteração de Médicos registrados</h3>
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <th>Especialização</th>
+            <th>Médico</th>
+            <th>CRM</th>
+            <th>Telefone</th>
+            <th>E-mail</th>
+            <th>Opções</th>
+        </tr>
+        {% for campo in lista_medicos %}
+            <tr>
+                <td>{{ campo.especializacao }}</td>
+                <td>{{ campo.nome_medico }}</td>
+                <td>{{ campo.crm }}</td>
+                <td>{{ campo.telefone }}</td>
+                <td>{{ campo.email }}</td>
+                <td>
+                    <a href="{% url 'editar_verificacao' campo.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'excluir_verificacao' campo.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">Nenhum registro encontrado.</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<hr>
+{% endblock %}

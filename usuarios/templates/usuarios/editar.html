@@ -1,0 +1,42 @@
+{% extends 'usuarios/base.html' %}
+
+{% block aba %}Editar Médico{% endblock %}
+
+{% block titulo %}Editar Médico{% endblock %}
+
+{% block conteudo %}
+
+<h3>Edição do Médico Selecionado</h3>
+<p class="lead">Verifique as informações cadastradas e faça as devidas alterações.</p>
+<hr>
+<form action="{% url 'editar' lista_medicos.pk %}" method="POST">
+{% csrf_token %}
+    <div class="form-register">
+        <label for="medicoNome">Nome:</label>
+        <input type="text" id="medicoNome" name="nome_medico" value="{{ lista_medicos.nome_medico }}">
+    </div>
+    <div class="form-register">
+        <label for="medicoEspecialidade">Especialização:</label>
+        <input type="text" id="medicoEspecialidade" name="especializacao" value="{{ lista_medicos.especializacao }}">
+    </div>
+    <div class="form-register">
+        <label for="medicoCrm">CRM:</label>
+        <input type="text" id="medicoCrm" name="crm" value="{{ lista_medicos.crm }}">
+    </div>
+    <div class="form-register">
+        <label for="medicoEmail">E-mail:</label>
+        <input type="text" id="medicoCrm" name="email" value="{{ lista_medicos.email }}">
+    </div>
+    <div class="form-register">
+        <label for="medicoFone">Telefone:</label>
+        <input type="text" id="medicoFone" name="telefone" value="{{ lista_medicos.telefone }}">
+    </div>
+
+    <div class="update">
+        <button type="submit" class="btn btn-success btn-sm">Atualizar</button>
+        <a href="{% url 'alterar' %}" class="btn btn-danger btn-sm">Voltar</a>
+    </div>
+    
+</form>
+
+{% endblock %}

@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_django, logout as logout_django
 from .models import Medico
+from django.urls import reverse
 
 def login(request):
     if request.method == "GET":
@@ -75,13 +76,84 @@ def lancar(request):
             return render(request, 'usuarios/home.html')
 
 def alterar(request):
-    if request.user.is_authenticated:
-        return render(request, 'usuarios/alterar.html')
-    else:
-        return HttpResponse("Faça o login para acessar!")
+    if request.method =="GET":
+        if request.user.is_authenticated:
+            lista_medicos = Medico.objects.all()
+            dicionario_medicos = {'lista_medicos':lista_medicos}
+            return render(request, 'usuarios/alterar.html', dicionario_medicos)
+        else:
+            return HttpResponse("Faça login para acessar!")
 
-def visualizar(request):
-    if request.user.is_authenticated:
-        return render(request, 'usuarios/visualizar.html')
+#def visualizar(request):
+#    if request.method == "GET":
+#        if request.user.is_authenticated:
+#            lista_medicos = Medico.objects.all()
+#            dicionario_medicos = {'lista_medicos':lista_medicos}
+#            return render(request, 'usuarios/visualizar.html', dicionario_medicos)
+#        else:
+#            return HttpResponse("Fala o login para acessar!")
+#    else:
+#        especializacao = request.POST.get('especializacao')
+#        if especializacao == "Todas as epecializações":
+#            lista_medicos = Medico.objects.all()
+#            dicionario_medicos = {'lista_medicos':lista_medicos}
+#            return render(request, 'usuarios/visualizar.html', dicionario_medicos)
+#        else:
+#            lista_medicos = Medico.objects.filter(especializacao=especializacao)
+#            dicionario_especial_filtradas = {'lista_medicos':lista_medicos}
+#            return render(request, 'usuarios/visualizar.html', dicionario_especial_filtradas)
+
+def visualizar_medicos(request):
+    especializacao_selecionada = request.POST.get('especializacao', '')
+    if especializacao_selecionada:
+        lista_medicos = Medico.objects.filter(especializacao=especializacao_selecionada)
     else:
-        return HttpResponse("Faça o login para acessar!")
+        lista_medicos = Medico.objects.all()
+    
+    lista_especializacoes = Medico.objects.values_list('especializacao', flat=True).distinct()
+
+    return render(request, 'usuarios/visualizar.html', {
+        'lista_medicos': lista_medicos,
+        'lista_especializacoes': lista_especializacoes,
+        'especializacao_selecionada': especializacao_selecionada
+    })
+
+def excluir_verificacao(request, pk):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            lista_medicos = Medico.objects.get(pk=pk)
+            dicionario_medicos = {'lista_medicos':lista_medicos}
+            return render(request, 'usuarios/excluir.html', dicionario_medicos)
+        else:
+            return HttpResponse("Fala o login para acessar!")
+        
+def excluir(request, pk):
+    if request.method =="GET":
+        if request.user.is_authenticated:
+            medico_selecionado = Medico.objects.get(pk=pk)
+            medico_selecionado.delete()
+            return HttpResponseRedirect(reverse('alterar'))
+        else:
+            return HttpResponse("Faça o login para acessar!")
+        
+def editar_verificacao(request, pk):
+    if request.method =="GET":
+        if request.user.is_authenticated:
+            lista_medicos = Medico.objects.get(pk=pk)
+            dicionario_medico = {'lista_medicos':lista_medicos}
+            return render(request, 'usuarios/editar.html', dicionario_medico)
+        else:
+            return HttpResponse("Fala o login para acessar!")
+        
+def editar(request, pk):
+    if request.method =="POST":
+        if request.user.is_authenticated:
+            nome_medico = request.POST.get('nome_medico')
+            especializacao = request.POST.get('especializacao')
+            crm = request.POST.get('crm')
+            email = request.POST.get('email')
+            telefone = request.POST.get('telefone')
+            Medico.objects.filter(pk=pk).update(nome_medico=nome_medico, especializacao=especializacao, crm=crm, email=email, telefone=telefone)
+            return HttpResponseRedirect(reverse('alterar'))
+        else:
+            return HttpResponse("Faça o login para acessar!")
