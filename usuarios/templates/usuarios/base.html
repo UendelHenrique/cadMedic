@@ -20,11 +20,16 @@
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Página
-                            Inicial</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Usuário: {{ user.email }}</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Página Inicial</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'lancar' %}">Cadastrar</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'alterar' %}">Alterar</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'visualizar' %}">Visualizar</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Sobre</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Contato</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                {% endif %}
                 </ul>
             </div>
         </div>
@@ -46,8 +51,7 @@
         <!-- Call to Action-->
         <div class="card text-white bg-primary bg-gradient my-5 py-4 text-center">
             <div class="card-body">
-                <p class="text-white m-0">{% block titulo %}Seja bem-vindo(a) ao Guia Médico, aqui encontrará as
-                    especialidades disponíveis.{% endblock %}</p>
+                <p class="text-white m-0">{% block titulo %}Seja bem-vindo(a) ao Guia Médico, aqui encontrará os profissionais disponíveis.{% endblock %}</p>
             </div>
         </div>
         <!-- Content Row-->

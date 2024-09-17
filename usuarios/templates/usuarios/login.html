@@ -2,7 +2,7 @@
 
 {% block aba %}Guia Médico{% endblock %}
 
-{% block titulo %}Guia Médico{% endblock %}
+{% block titulo %}<h5>Sistema de Gerenciamento de Médicos Credenciados</h5>{% endblock %}
 
 {% block conteudo %}
 <div class="container">
@@ -30,6 +30,10 @@
             </div>
             <div class="d-grid">
               <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Login</button>
+            </div>
+            <hr class="my-4">
+            <div class="d-grid">
+              <a href="{% url 'cadastro' %}" class="btn btn-primary btn-success text-uppercase fw-bold">Criar nova conta</a>
             </div>
             <hr class="my-4">
             <!--

@@ -26,7 +26,8 @@ def logout(request):
         logout_django(request)
         return render(request, 'usuarios/login.html')
     else:
-        return HttpResponse("Você não acessou sua conta!")
+        #return HttpResponse("Você não acessou sua conta!")
+        return render(request, 'usuarios/login.html')
 
 def cadastro(request):
     if request.method =="GET":
@@ -51,14 +52,16 @@ def home(request):
     if request.user.is_authenticated:
         return render(request, 'usuarios/home.html')
     else:
-        return HttpResponse("Faça o login para acessar!")
+        #return HttpResponse("Faça o login para acessar!")
+        return render(request, 'usuarios/login.html')
 
 def lancar(request):
     if request.method =='GET':
         if request.user.is_authenticated:
             return render(request, 'usuarios/lancar.html')
         else:
-            return HttpResponse("Faça o login para acessar!")
+            #return HttpResponse("Faça o login para acessar!")
+            return render(request, 'usuarios/login.html')
     else:
         medico = Medico()
         medico.nome_medico = request.POST.get('nome_medico')
@@ -82,7 +85,8 @@ def alterar(request):
             dicionario_medicos = {'lista_medicos':lista_medicos}
             return render(request, 'usuarios/alterar.html', dicionario_medicos)
         else:
-            return HttpResponse("Faça login para acessar!")
+            #return HttpResponse("Faça login para acessar!")
+            return render(request, 'usuarios/login.html')
 
 #def visualizar(request):
 #    if request.method == "GET":
@@ -134,7 +138,8 @@ def excluir(request, pk):
             medico_selecionado.delete()
             return HttpResponseRedirect(reverse('alterar'))
         else:
-            return HttpResponse("Faça o login para acessar!")
+            #return HttpResponse("Faça o login para acessar!")
+            return render(request, 'usuarios/login.html')
         
 def editar_verificacao(request, pk):
     if request.method =="GET":
@@ -156,4 +161,5 @@ def editar(request, pk):
             Medico.objects.filter(pk=pk).update(nome_medico=nome_medico, especializacao=especializacao, crm=crm, email=email, telefone=telefone)
             return HttpResponseRedirect(reverse('alterar'))
         else:
-            return HttpResponse("Faça o login para acessar!")
+            #return HttpResponse("Faça o login para acessar!")
+            return render(request, 'usuarios/login.html')
