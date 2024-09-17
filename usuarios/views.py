@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from django.contrib.auth import login as login_django
+from django.contrib.auth import login as login_django, logout as logout_django
+from .models import Medico
 
 def login(request):
     if request.method == "GET":
@@ -15,9 +16,16 @@ def login(request):
 
         if user:
             login_django(request, user)
-            return HttpResponse('Autenticado!')
+            return render(request, 'usuarios/home.html')
         else:
             return HttpResponse('E-mail ou senha inválidos!')
+        
+def logout(request):
+    if request.user.is_authenticated:
+        logout_django(request)
+        return render(request, 'usuarios/login.html')
+    else:
+        return HttpResponse("Você não acessou sua conta!")
 
 def cadastro(request):
     if request.method =="GET":
@@ -36,7 +44,44 @@ def cadastro(request):
             user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name)
             user.save()
 
-            return HttpResponse("Usuário cadastrado com sucesso!")
+            return render(request, 'usuarios/login.html')
         
 def home(request):
-    return render(request, 'usuarios/home.html')
+    if request.user.is_authenticated:
+        return render(request, 'usuarios/home.html')
+    else:
+        return HttpResponse("Faça o login para acessar!")
+
+def lancar(request):
+    if request.method =='GET':
+        if request.user.is_authenticated:
+            return render(request, 'usuarios/lancar.html')
+        else:
+            return HttpResponse("Faça o login para acessar!")
+    else:
+        medico = Medico()
+        medico.nome_medico = request.POST.get('nome_medico')
+        medico.especializacao = request.POST.get('especializacao')
+        medico.crm = request.POST.get('crm')
+        medico.email = request.POST.get('email')
+        medico.telefone = request.POST.get('telefone')
+
+        medico_verificado = Medico.objects.filter(nome_medico=medico.nome_medico).first()
+
+        if medico_verificado:
+            return HttpResponse("Já possui cadastro desse médico!")
+        else:
+            medico.save()
+            return render(request, 'usuarios/home.html')
+
+def alterar(request):
+    if request.user.is_authenticated:
+        return render(request, 'usuarios/alterar.html')
+    else:
+        return HttpResponse("Faça o login para acessar!")
+
+def visualizar(request):
+    if request.user.is_authenticated:
+        return render(request, 'usuarios/visualizar.html')
+    else:
+        return HttpResponse("Faça o login para acessar!")

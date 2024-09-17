@@ -1,0 +1,37 @@
+{% extends 'usuarios/base.html' %}
+
+{% block aba %}Cadastrar Médicos{% endblock %}
+
+{% block titulo %}Cadastrar Médicos{% endblock %}
+
+{% block conteudo %}
+
+<h3>Cadastro</h3>
+<p class="lead">Preencha todas as informações.</p>
+<hr>
+<form action="{% url 'lancar' %}" method="POST">
+{% csrf_token %}
+    <div class="form-register">
+        <label for="medicoNome">Nome:</label>
+        <input type="text" id="medicoNome" name="nome_medico">
+    </div>
+    <div class="form-register">
+        <label for="medicoEspecialidade">Especialização:</label>
+        <input type="text" id="medicoEspecialidade" name="especializacao">
+    </div>
+    <div class="form-register">
+        <label for="medicoCrm">CRM:</label>
+        <input type="text" id="medicoCrm" name="crm">
+    </div>
+    <div class="form-register">
+        <label for="medicoEmail">E-mail:</label>
+        <input type="text" id="medicoCrm" name="email">
+    </div>
+    <div class="form-register">
+        <label for="medicoFone">Telefone:</label>
+        <input type="text" id="medicoFone" name="telefone">
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar Médico</button>
+</form>
+
+{% endblock %}
